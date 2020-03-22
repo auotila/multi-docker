@@ -17,6 +17,23 @@ after_success:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push images to docker hub
     - docker push auotila/multi-client
+    - docker push auotila/multi-worker
     - docker push auotila/multi-nginx
     - docker push auotila/multi-server
-    - docker push auotila/multi-worker
+
+deploy:
+    provider: elasticbeanstalk
+    region: eu-north-1
+    app: multi-docker
+    env: MultiDocker-env
+    bucket_name: elasticbeanstalk-eu-north-1-771896602560
+    bucket_path: docker-multi
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+
+
+#deploy:
+#   edge: true
+#   provider: elasticbeanstalk
